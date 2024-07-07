@@ -15,4 +15,8 @@ class Category extends Model
         'number'
     ];
 
+    // protected $hidden = [
+    //     'title',
+    // ];
+
 }

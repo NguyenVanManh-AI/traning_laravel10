@@ -1,0 +1,113 @@
+user
+http://localhost:8000/login
+http://localhost:8000/user/infor
+
+admin
+http://localhost:8000/login
+http://localhost:8000/admin/login
+http://localhost:8000/admin/infor 
+            => đứng từ này đi đến các url khác 
+            http://localhost:8000/dashboard/calendar
+            (không đúng từ source html)
+
+// AdminLTE
+Route::prefix('dashboard')->name('dashboard.')->group(function () {
+    Route::middleware(['check.auth:admin,admin_api'])->group(function () {
+        Route::view('/calendar', 'admin.pages.calendar');
+        Route::view('/gallery', 'admin.pages.gallery');
+        Route::view('/kanban', 'admin.pages.kanban');
+        Route::view('/overview', 'admin.pages.overview')->name('overvie
+
+
+api 
+- CheckAuthenticate : Check cả auth của web và api 
+    + check thêm một số thứ khác ngay trong check auth . checkUserBlockAndDelete 
+    + Hoặc vẫn có thể tách ra một middleware riêng => trường hợp này nói chung và trường hợp khác nói riêng ví dụ 
+    check trong database user đó phải mua hoặc đăng kí gì đó đã mới được đi tiếp 
+
+web 
+- RedirectWhenAuthenticated : chuyển trang khi đã login 
+- CheckAuthenticate : Check cả auth của web và api 
+
+
+
+Code logic 
+
++ Khối xử lý thành công 
+        // Lặp qua hết tất cả các guard 
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {   ====> kiểm tra nếu có auth của guard đó 
+                if ($guard == 'user_api') {
+                    if ($this->checkUserBlockAndDelete($guard)) {
+                        continue;
+                    }
+                }
+
+                return $next($request);  => đi tiếp 
+            }
+        }
+
+
+
++ Khối thất bại , đến đây nghĩa là không có auth nào rồi nên dừng lại 
+        // Thông báo 401 hoặc trỏ đến trang cần thiết
+        foreach ($guards as $guard) {
+            if ($guard == 'user') {
+                // return redirect()->route('errors.401');
+                return redirect()->route('user.login.view');
+            }
+
+            if ($guard == 'admin') {
+                // return redirect()->route('errors.401');
+                return redirect()->route('admin.login.view');
+            }
+
+            if ($guard == 'admin_api') {
+                return $this->responseError('Unauthenticated !', 401);
+                // return response()->json(['error' => 'Unauthenticated.'], 401);
+                // ở đây json ta có thể trả về tùy ý và thêm nhiều param khác nữa
+            }
+
+            if ($guard == 'user_api') {
+                return $this->responseError('Unauthenticated !', 401);
+                // return response()->json(['error' => 'Unauthenticated.'], 401);
+            }
+        }
+
+
+
+TH2 : Nhiều Guard , cũng tương tự , ví dụ : check.auth:user,admin => lặp qua hết nếu không có cái nào thõa mãn thì chuyển đến for tiếp theo để
+            thôn báo 401 hoặc chuyển trến trang login
+
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {    <======= vừa check check.auth:user,admin
+                if ($guard == 'user_api') {
+                    if ($this->checkUserBlockAndDelete($guard)) {
+                        continue;
+                    }
+                }
+
+                return $next($request);
+            }
+        }
+
+
+TRAINING : KHÔNG OPTIMIZE MIDDLEWARE THÀH 1 , KHÔNG GỘP CỦA role của admin và user lại (guard admin_api và user_api)
+cứ tách ra cho DỄ HIỂU 
+
+THAM KHẢO THÔI : 
+// 'role' => \App\Http\Middleware\CheckUserRole::class,
+// 'role_admin' => \App\Http\Middleware\CheckAdminRole::class,
+'role' => \App\Http\Middleware\CheckRole::class, // Tại vì admins và users đều có cột role nên dùng chung luôn , không cần tách ra nữa
+
+
+
+Route::middleware(['auth:admin_api', 'role:superadmin,manager'])->group(function () {
+Route::middleware(['auth:admin_api,user_api', 'role:admin,superadmin,manager,doctor,hospital'])->group(function () {
+
+
+
+----------------------
+Comment and Reply Comment đa cấp sử dụng ĐỆ QUY : http://localhost:8000/comment/article/1
++ Table đơn giản 
++ Blade sử dụng lại 
