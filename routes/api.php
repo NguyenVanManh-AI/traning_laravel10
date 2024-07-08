@@ -46,6 +46,10 @@ Route::prefix('user')->controller(UserController::class)->group(function () {
 Route::prefix('category')->controller(CategoryController::class)->group(function () {
     Route::middleware(['check.auth:user_api,admin_api'])->group(function () {
         Route::post('/add', 'addCategory');
+    });
+
+    Route::middleware(['check.auth:user_api', 'role:hospital,doctor'])->group(function () {
+    // Route::middleware(['check.auth:user_api,admin_api', 'role:hospital,doctor,admin'])->group(function () {
         Route::get('/all', 'getAll');
     });
 });
