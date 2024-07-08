@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Category;
 
+use App\Rules\Uppercase;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -26,7 +27,7 @@ class RequestAddCategory extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string',
+            'title' => ['required','string', new Uppercase],
             'description' => 'required|string',
             'number' => 'required|numeric',
         ];
