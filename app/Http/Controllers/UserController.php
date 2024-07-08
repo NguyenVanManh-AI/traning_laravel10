@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RequestUserLogin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Throwable;
@@ -26,7 +27,7 @@ class UserController extends Controller
     }
 
     // public function login(RequestLogin $request)
-    public function login(Request $request)
+    public function login(RequestUserLogin $request)
     {
         try {
 
