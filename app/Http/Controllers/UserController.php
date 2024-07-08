@@ -30,8 +30,14 @@ class UserController extends Controller
     {
         try {
 
-            $admin = User::where('email', $request->email)->first();
-            if (empty($admin)) {
+            // // quick validate 
+            // $request->validate([
+            //     'email' => 'required|email',
+            //     'password' => 'required',
+            // ]);
+
+            $user = User::where('email', $request->email)->first();
+            if (empty($user)) {
                 return $this->responseError(400, 'Email không tồn tại !');
             }
 
@@ -40,11 +46,11 @@ class UserController extends Controller
             if (!auth()->guard('user_api')->attempt($data)) {
                 return $this->responseError(400, 'Email hoặc mật khẩu không đúng !');
             }
-            $admin->access_token = auth()->guard('user_api')->attempt($data);
-            $admin->token_type = 'bearer';
-            $admin->expires_in = auth()->guard('user_api')->factory()->getTTL() * 60;
+            $user->access_token = auth()->guard('user_api')->attempt($data);
+            $user->token_type = 'bearer';
+            $user->expires_in = auth()->guard('user_api')->factory()->getTTL() * 60;
 
-            return $this->responseOK(200, $admin, 'Đăng nhập thành công !');
+            return $this->responseOK(200, $user, 'Đăng nhập thành công !');
         } catch (Throwable $e) {
             return $this->responseError(400, $e->getMessage());
         }
