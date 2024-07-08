@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->dropColumn('title');
-        });
+        // Schema::table('categories', function (Blueprint $table) {
+        //     $table->dropColumn('title');
+        // });
     }
 
     /**
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->string('title');
-        });
+        // Schema::table('categories', function (Blueprint $table) {
+        //     $table->string('title');
+        // });
     }
 };

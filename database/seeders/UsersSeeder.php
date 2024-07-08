@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use GuzzleHttp\Client;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 
 class UsersSeeder extends Seeder
@@ -16,22 +17,57 @@ class UsersSeeder extends Seeder
      */
     public function run()
     {
-        
         $users = [
             [
-                'email' => 'nguyenvanmanh2001it1@gmail.com',
-                'password' => Hash::make('123456'),
-                'name' => 'Nguyễn Văn Mạnh',
+                'email' => 'hoangphuc@yopmail.com',
+                'name' => 'Nguyễn Văn Hoàng Phúc',
+                'role' => 'user',
+            ],
+
+            [
+                'email' => 'duyentran@yopmail.com',
+                'name' => 'Nguyễn Trần Mỹ Duyên',
+                'role' => 'user',
             ],
             [
-                'email' => 'nguyenvanmanh.it1@yopmail.com',
-                'password' => Hash::make('123456'),
-                'name' => 'Nhật Minh',
+                'email' => 'benhviengiadinh@yopmail.com',
+                'name' => 'Bệnh viện gia đình',
+                'role' => 'hospital',
+            ],
+            [
+                'email' => 'benhviendakhoa@yopmail.com',
+                'name' => 'Bệnh viện đa khoa',
+                'role' => 'hospital',
+            ],
+            [
+                'email' => 'bacsian@yopmail.com',
+                'name' => 'Bác sĩ Nguyễn Văn An',
+                'role' => 'doctor',
+            ],
+            [
+                'email' => 'bacsilanhuong@yopmail.com',
+                'name' => 'Bác sĩ Nguyễn Lan Hương',
+                'role' => 'doctor',
             ],
         ];
 
-        foreach ($users as $user) {
-            User::create($user);
+        foreach ($users as $index => $user) {
+            $data = array_merge(
+                $user,
+                [
+                    'password' => Hash::make('123456'),
+                    'google_id' => null,
+                    'facebook_id' => null,
+                    'github_id' => null,
+                    'gitlab_id' => null,
+                    'avatar' => null,
+                    'token_verify_email' => null,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                    'email_verified_at' => now(),
+                ]
+            );
+            User::create($data);
         }
     }
 }

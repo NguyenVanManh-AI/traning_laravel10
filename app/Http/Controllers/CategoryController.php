@@ -51,18 +51,22 @@ class CategoryController extends Controller
 
     // Tạo, Cập nhật và Xóa Dữ liệu
 
-        // $data = [
-        //     'title' => $request->title,
-        //     'description' => $request->description,
-        //     'number' => $request->number,
-        // ];
+        $data = [
+            'title' => $request->title,
+            'description' => $request->description,
+            'number' => $request->number,
+        ];
 
-        // $new_category = Category::create($data);
+        $new_category = Category::create($data);
 
-        // return response()->json([
-        //     'data' => $new_category,
-        //     'message' => 'Success !',
-        // ], 200);
+        // for($i=1; $i<=100; $i++) { 
+            // $new_category = Category::create($data);
+        // }
+
+        return response()->json([
+            'data' => $new_category,
+            'message' => 'Success !',
+        ], 200);
 
 
         // $category = Category::find(7);
@@ -158,8 +162,15 @@ class CategoryController extends Controller
         //     'data' => $data,
         //     'message' => 'Success !',
         // ], 200);
-
-        
-
     }
+
+    public function getAll(Request $request) {
+        // Phân trang 
+        $result = Category::paginate($request->per_page);
+        return response()->json([
+            'result' => $result,
+            'message' => 'Success !',
+        ], 200);
+    }
+
 }

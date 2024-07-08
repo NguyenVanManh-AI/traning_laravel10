@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Throwable;
 
-class AdminController extends Controller
+class UserController extends Controller
 {
     public function responseOK($status = 200, $data = null, $message = '')
     {
@@ -30,32 +30,19 @@ class AdminController extends Controller
     {
         try {
 
-            // kiểm tra email có tồn tại ? 
-            $admin = Admin::where('email', $request->email)->first();
+            $admin = User::where('email', $request->email)->first();
             if (empty($admin)) {
                 return $this->responseError(400, 'Email không tồn tại !');
             }
 
+            $data = request(['email', 'password']);  
 
-            // kiểm tra mật khẩu có đúng ? 
-            // $data = request(['email', 'password']);  // C1 
-
-            // C2 
-            $data = [
-                "email" => $request->email,
-                "password" => $request->password,
-            ];
-
-            if (!auth()->guard('admin_api')->attempt($data)) {
+            if (!auth()->guard('user_api')->attempt($data)) {
                 return $this->responseError(400, 'Email hoặc mật khẩu không đúng !');
             }
-
-            // trả về thông tin nếu toàn bộ đã đúng 
-            $admin->access_token = auth()->guard('admin_api')->attempt($data);
+            $admin->access_token = auth()->guard('user_api')->attempt($data);
             $admin->token_type = 'bearer';
-            $admin->expires_in = auth()->guard('admin_api')->factory()->getTTL() * 60;
-            // $admin->abc = [123,'avv'];
-            // $admin->a1 = 'a1';
+            $admin->expires_in = auth()->guard('user_api')->factory()->getTTL() * 60;
 
             return $this->responseOK(200, $admin, 'Đăng nhập thành công !');
         } catch (Throwable $e) {
@@ -65,11 +52,11 @@ class AdminController extends Controller
 
     public function profile()
     {
-        $admin = auth('admin_api')->user();
+        $user = auth('user_api')->user();
 
         return response()->json([
             'message' => 'Xem thông tin cá nhân thành công !',
-            'data' => $admin,
+            'data' => $user,
             'status' => 200,
         ], 200);
     }
