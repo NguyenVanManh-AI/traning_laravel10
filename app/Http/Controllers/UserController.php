@@ -6,6 +6,10 @@ use App\Http\Requests\RequestUserLogin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Throwable;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ForgotPasswordSendCode;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -64,6 +68,22 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Xem thông tin cá nhân thành công !',
             'data' => $user,
+            'status' => 200,
+        ], 200);
+    }
+
+    public function forgotSend(Request $request) {
+        $email = $request->email;
+        $token = Str::random(32);
+
+        // Các bước xử lý logic liên quan đến email và token
+        Mail::to($email)->send(new ForgotPasswordSendCode($token));
+        info("Email sent to $email with URL: $token");
+        Log::info("Email sent to $email with URL: $token");
+
+        return response()->json([
+            'message' => "Send mail for $email success !",
+            'data' => null,
             'status' => 200,
         ], 200);
     }

@@ -35,6 +35,8 @@ Route::prefix('admin')->controller(AdminController::class)->group(function () {
 Route::prefix('user')->controller(UserController::class)->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
+    Route::post('forgot-pw-sendcode', 'forgotSend');
+    // Route::post('forgot-update', 'forgotUpdate');
     Route::middleware('check.auth:user_api')->group(function () {
         Route::get('logout', 'logout');
         Route::get('profile', 'profile');
@@ -53,5 +55,7 @@ Route::prefix('category')->controller(CategoryController::class)->group(function
         Route::get('/all', 'getAll');
     });
 });
+
+
 
 // Route::middleware(['check.auth:user_api, admin_api', 'role:hospital,doctor'])->group(function () {
