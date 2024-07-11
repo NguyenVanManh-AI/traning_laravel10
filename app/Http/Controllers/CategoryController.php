@@ -6,6 +6,7 @@ use App\Http\Requests\Category\RequestAddCategory;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Throwable;
 
 class CategoryController extends Controller
@@ -50,6 +51,8 @@ class CategoryController extends Controller
 
 
     // Tạo, Cập nhật và Xóa Dữ liệu
+
+        Cache::forget('categories');
 
         $data = [
             'title' => $request->title,
@@ -164,9 +167,14 @@ class CategoryController extends Controller
         // ], 200);
     }
 
-    public function getAll(Request $request) {
-        // Phân trang 
-        $result = Category::paginate($request->per_page);
+    public function getAll(Request $request) {        
+        
+        $per_page = $request->per_page;
+        $result = Cache::remember('categories', 60, function () use ($per_page) {  // 60 phút 
+            return Category::paginate($per_page);
+        });
+
+        // $result = Category::paginate($request->per_page);
         return response()->json([
             'result' => $result,
             'message' => 'Success !',
