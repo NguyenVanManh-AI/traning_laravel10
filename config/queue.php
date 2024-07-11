@@ -34,7 +34,7 @@ return [
             'driver' => 'sync',
         ],
 
-        'database' => [
+        'database' => [ 
             'driver' => 'database',
             'table' => 'jobs',
             'queue' => 'default',

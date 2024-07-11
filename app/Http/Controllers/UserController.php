@@ -10,6 +10,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgotPasswordSendCode;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Queue;
+use App\Jobs\SendForgotPasswordEmail;
+use App\Enums\UserEnum;
 
 class UserController extends Controller
 {
@@ -77,9 +80,16 @@ class UserController extends Controller
         $token = Str::random(32);
 
         // Các bước xử lý logic liên quan đến email và token
-        Mail::to($email)->send(new ForgotPasswordSendCode($token));
-        info("Email sent to $email with URL: $token");
-        Log::info("Email sent to $email with URL: $token");
+        // Không dùng queue 
+        // Mail::to($email)->send(new ForgotPasswordSendCode($token));
+        // info("Email sent to $email with URL: $token");
+        // Log::info("Email sent to $email with URL: $token");
+
+        // Dùng queue 
+        $url = UserEnum::FORGOT_FORM_USER . $token;
+        Log::info("Add jobs to Queue , Email: $email with URL: $url");
+        Queue::push(new SendForgotPasswordEmail($email, $url));
+
 
         return response()->json([
             'message' => "Send mail for $email success !",

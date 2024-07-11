@@ -10,17 +10,17 @@ class ForgotPasswordSendCode extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $token;
+    public $url;
 
-    public function __construct($token)
+    public function __construct($url)
     {
-        $this->token = $token;
+        $this->url = $url;
     }
 
     public function build()
     {
         $subject = 'Notice from LINE Bot system !';
 
-        return $this->subject($subject)->view('emails.send_code')->with('token', $this->token);
+        return $this->subject($subject)->view('emails.send_code')->with('url', $this->url);
     }
 }

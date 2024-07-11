@@ -21,7 +21,7 @@
     <div style="background-color: #007eff1c;padding: 20px;border: 2px dashed #007bff;">
         <p>
             <h4>This is the email to reset your password. Please click the link here.</h4>
-            <h4><a style="color: rgb(0, 123, 255);text-decoration: underline" href="{{ $token }}">{{ $token }}</a></h4>
+            <h4><a style="color: rgb(0, 123, 255);text-decoration: underline" href="{{ $url }}">{{ $url }}</a></h4>
         </p>
     </div>
 
