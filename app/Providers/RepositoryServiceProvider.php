@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\CategoryRepository;
+use App\Repositories\CategoryInterface;
 use App\Repositories\AdminInterface;
 use App\Repositories\AdminRepository;
 use App\Repositories\ExampleInterface;
@@ -21,6 +23,7 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(CategoryInterface::class, CategoryRepository::class);
         // $this->app->bind(ExampleInterface::class, ExampleRepository::class);
         $this->app->bind(AdminInterface::class, AdminRepository::class);
         $this->app->bind(UserInterface::class, UserRepository::class);
