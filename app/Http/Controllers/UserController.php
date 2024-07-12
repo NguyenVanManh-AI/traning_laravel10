@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RequestUserLogin;
+use App\Http\Requests\RequestLogin;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Throwable;
 use Illuminate\Support\Str;
@@ -16,85 +17,31 @@ use App\Enums\UserEnum;
 
 class UserController extends Controller
 {
-    public function responseOK($status = 200, $data = null, $message = '')
+
+    protected UserService $userService;
+
+    public function __construct(UserService $userService)
     {
-        return response()->json([
-            'message' => $message,
-            'data' => $data,
-            'status' => $status,
-        ], $status);
+        $this->userService = $userService;
     }
 
-    public function responseError($status = 400, $message = '')
+    public function login(RequestLogin $request)
     {
-        return response()->json([
-            'message' => $message,
-            'status' => $status,
-        ], $status);
+        // $filter = [
+            // 'email' => $request->email,
+            // 'password' => $request->password
+        // ];
+        return $this->userService->login($request);
     }
 
-    // public function login(RequestLogin $request)
-    public function login(RequestUserLogin $request)
+    public function profile(Request $request)
     {
-        try {
-
-            // // quick validate 
-            // $request->validate([
-            //     'email' => 'required|email',
-            //     'password' => 'required',
-            // ]);
-
-            $user = User::where('email', $request->email)->first();
-            if (empty($user)) {
-                return $this->responseError(400, 'Email không tồn tại !');
-            }
-
-            $data = request(['email', 'password']);  
-
-            if (!auth()->guard('user_api')->attempt($data)) {
-                return $this->responseError(400, 'Email hoặc mật khẩu không đúng !');
-            }
-            $user->access_token = auth()->guard('user_api')->attempt($data);
-            $user->token_type = 'bearer';
-            $user->expires_in = auth()->guard('user_api')->factory()->getTTL() * 60;
-
-            return $this->responseOK(200, $user, 'Đăng nhập thành công !');
-        } catch (Throwable $e) {
-            return $this->responseError(400, $e->getMessage());
-        }
+        return $this->userService->profile($request);
     }
 
-    public function profile()
+    public function userGetMembers(Request $request)
     {
-        $user = auth('user_api')->user();
-
-        return response()->json([
-            'message' => 'Xem thông tin cá nhân thành công !',
-            'data' => $user,
-            'status' => 200,
-        ], 200);
+        return $this->userService->userGetMembers($request);
     }
 
-    public function forgotSend(Request $request) {
-        $email = $request->email;
-        $token = Str::random(32);
-
-        // Các bước xử lý logic liên quan đến email và token
-        // Không dùng queue 
-        // Mail::to($email)->send(new ForgotPasswordSendCode($token));
-        // info("Email sent to $email with URL: $token");
-        // Log::info("Email sent to $email with URL: $token");
-
-        // Dùng queue 
-        $url = UserEnum::FORGOT_FORM_USER . $token;
-        Log::info("Add jobs to Queue , Email: $email with URL: $url");
-        Queue::push(new SendForgotPasswordEmail($email, $url));
-
-
-        return response()->json([
-            'message' => "Send mail for $email success !",
-            'data' => null,
-            'status' => 200,
-        ], 200);
-    }
 }

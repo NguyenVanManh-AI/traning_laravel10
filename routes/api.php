@@ -28,6 +28,7 @@ Route::prefix('admin')->controller(AdminController::class)->group(function () {
         Route::get('logout', 'logout');
         Route::get('profile', 'profile');
         Route::post('update', 'updateProfile');
+        Route::get('admin-get-member', 'adminGetMembers');
     });
 });
 
@@ -41,6 +42,7 @@ Route::prefix('user')->controller(UserController::class)->group(function () {
         Route::get('logout', 'logout');
         Route::get('profile', 'profile');
         Route::post('update', 'updateProfile');
+        Route::get('user-get-member', 'userGetMembers');
     });
 });
 
