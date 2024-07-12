@@ -12,7 +12,7 @@ class UserTestCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'users:test_comand {name}';
+    protected $signature = 'users:test_comand';
 
     /**
      * The console command description.
@@ -28,8 +28,6 @@ class UserTestCommand extends Command
      */
     public function handle()
     {
-        $name = $this->argument('name');
-        dump($name);
         dump('run command success !');
         $user = User::all();
         dump($user);
