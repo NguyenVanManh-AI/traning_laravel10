@@ -46,18 +46,25 @@ Route::prefix('user')->controller(UserController::class)->group(function () {
     });
 });
 
-// Category
 Route::prefix('category')->controller(CategoryController::class)->group(function () {
-    Route::middleware(['check.auth:user_api,admin_api'])->group(function () {
-        Route::post('/add', 'addCategory');
-    });
-
-    Route::middleware(['check.auth:user_api', 'role:hospital,doctor'])->group(function () {
-    // Route::middleware(['check.auth:user_api,admin_api', 'role:hospital,doctor,admin'])->group(function () {
-        Route::get('/all', 'getAll');
-    });
+    Route::post('/add', 'add');
+    Route::post('update/{id}', 'edit'); // ở đây dùng patch cũng được , tuy nhiên patch nó không cho thêm ảnh 
+    Route::delete('delete/{id}', 'delete'); // ở đây dùng post cx đc 
+    Route::delete('deletes', 'deleteMany');
+    Route::get('/', 'all');
+    Route::get('/detail/{id}', 'details');
 });
 
+// Category
+// Route::prefix('category')->controller(CategoryController::class)->group(function () {
+//     Route::middleware(['check.auth:user_api,admin_api'])->group(function () {
+//         Route::post('/add', 'addCategory');
+//     });
 
+//     Route::middleware(['check.auth:user_api', 'role:hospital,doctor'])->group(function () {
+//     // Route::middleware(['check.auth:user_api,admin_api', 'role:hospital,doctor,admin'])->group(function () {
+//         Route::get('/all', 'getAll');
+//     });
+// });
 
 // Route::middleware(['check.auth:user_api, admin_api', 'role:hospital,doctor'])->group(function () {
