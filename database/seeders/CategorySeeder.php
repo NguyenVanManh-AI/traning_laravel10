@@ -17,14 +17,18 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             [
-                'title' => 'Title 1 ',
+                'title' => 'Title 1',
                 'description' => 'description 1',
-                'number' => 99,
+                'search_number' => 99,
+                'tag' => json_encode(['tag1', 'tag2', 'tag3']),
+                'thumbnail' => null,
             ],
             [
-                'title' => 'Title 2 ',
+                'title' => 'Title 2',
                 'description' => 'description 2',
-                'number' => 199,
+                'search_number' => 199,
+                'tag' => json_encode(['tag1', 'tag2', 'tag3']),
+                'thumbnail' => null,
             ],
         ];
 

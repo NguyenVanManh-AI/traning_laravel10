@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id(); 
-            $table->string('title');
+            $table->string('title')->unique(); // duy nhất
             $table->string('description');
-            $table->integer('number');
+            $table->integer('search_number')->default(0);
+            $table->json('tag')->nullable();
+            $table->string('thumbnail')->nullable();
             $table->timestamps();
         });
     }

@@ -12,7 +12,9 @@ class Category extends Model
         'id',
         'title',
         'description',
-        'number'
+        'number',
+        'tag',
+        'thumbnail',
     ];
 
     // protected $hidden = [
