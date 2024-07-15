@@ -50,7 +50,7 @@ Route::prefix('category')->controller(CategoryController::class)->group(function
     Route::post('/add', 'add');
     Route::post('update/{id}', 'edit'); // ở đây dùng patch cũng được , tuy nhiên patch nó không cho thêm ảnh 
     Route::delete('delete/{id}', 'delete'); // ở đây dùng post cx đc 
-    Route::delete('deletes', 'deleteMany');
+    Route::post('deletes', 'deleteMany');
     Route::get('/', 'all');
     Route::get('/detail/{id}', 'details');
 });
