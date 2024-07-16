@@ -12,7 +12,7 @@ class Category extends Model
         'id',
         'title',
         'description',
-        'number',
+        'search_number',
         'tag',
         'thumbnail',
     ];
